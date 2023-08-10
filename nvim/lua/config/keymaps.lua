@@ -13,5 +13,21 @@ map("n", "<leader>gG", function()
   Util.float_term({ "lazygit" }, { size = { width = 1.0, height = 1.0 } })
 end, { desc = "Lazygit (cwd dir)" })
 
+-- floating terminal
+-- local lazyterm = function()
+--   Util.float_term(nil, { size = { width = 0.7, height = 0.7 }, cwd = Util.get_root() })
+-- end
+-- map("n", "<leader>ft", lazyterm, { desc = "Terminal (root dir)" })
+-- map("n", "<leader>fT", function()
+--   Util.float_term({ size = { width = 0.7, height = 0.7 } })
+-- end, { desc = "Terminal (cwd)" })
+-- map("n", "<c-/>", lazyterm, { desc = "Terminal (root dir)" })
+-- map("n", "<c-_>", lazyterm, { desc = "which_key_ignore" })
+
+--
+-- map("n", "<leader>ft", function () lazyterm()
+--
+-- end)
+
 -- close all buffers
 map("n", "<leader>bo", "<cmd>%bd|e#<cr>", { desc = "Close all buffers but the current one" })
