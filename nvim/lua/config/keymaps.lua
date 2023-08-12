@@ -13,7 +13,10 @@ map("n", "<leader>gG", function()
   Util.float_term({ "lazygit" }, { size = { width = 1.0, height = 1.0 } })
 end, { desc = "Lazygit (cwd dir)" })
 
--- floating terminal
+map("i", "jj", "<esc>", { noremap = true })
+-- map({ "i", "v", "n", "s" }, "<C-j>", "<cmd>w<cr>", { desc = "Save file" })
+-- map("i", "<C-k>", "<cmd>w<cr>", { desc = "save file" })
+-- floating terminal sdv
 -- local lazyterm = function()
 --   Util.float_term(nil, { size = { width = 0.7, height = 0.7 }, cwd = Util.get_root() })
 -- end

@@ -43,6 +43,9 @@ return {
           hl["@variable.javascript"] = {
             fg = c.yellow,
           }
+          hl["@variable.typescript"] = {
+            fg = c.yellow,
+          }
           hl["@lsp.type.variable.typescriptreact"] = {
             fg = "#f1fa8c",
           }
