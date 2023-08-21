@@ -8,7 +8,7 @@ transparent_background_colors = true
 
   # Normal colors
   [colors.normal]
-  black = "#1D202F"
+  black = "#414868"
   red = "#f7768e"
   green = "#9ece6a"
   yellow = "#e0af68"
@@ -35,18 +35,25 @@ transparent_background_colors = true
 
 
 [window]
-opacity = 1
+opacity = 0.9
 # decorations = "none"
-dimensions = { columns =80 , lines =25 }
+dimensions = { columns =90 , lines =25 }
+padding = {x=3, y=0}
+dynamic_padding = true
 
 [font]
-normal = { family = "Hack Nerd Font", style = "Regular" }
-size = 11.5
+normal = { family = "CaskaydiaCove Nerd Font", style = "Regular" }
+size = 12.0
+glyph_offset = {x=0, y=2}
+offset= { x =0, y=3}
 
-[cursor]
-style = { shape = "Block", blinking = "Always" }
+[cursor]    
+style = { shape = "Beam", blinking = "Always" }
+thickness = 0.20
 
+[env]
+TERM = "xterm-256color"
 
 [shell]
 program = "/bin/zsh"
-# args = ["-l", "-c", "tmux"]
+args = ["-l", "-c", "tmux attach || tmux new -s main"]

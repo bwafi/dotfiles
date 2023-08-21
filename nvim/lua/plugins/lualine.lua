@@ -6,7 +6,7 @@ return {
       local icons = require("lazyvim.config").icons
       local Util = require("lazyvim.util")
       local colors = {
-        bg = "#202328",
+        bg = "#1F2335",
         fg = "#bbc2cf",
         yellow = "#ECBE7B",
         cyan = "#008080",
@@ -35,11 +35,17 @@ return {
 
       local config = {
         options = {
-          theme = "auto", -- Change to your preferred theme
+          theme = {
+            -- We are going to use lualine_c an lualine_x as left and
+            -- right section. Both are highlighted by c theme .  So we
+            -- are just setting default looks o statusline
+            normal = { c = { fg = colors.fg, bg = colors.bg } },
+            inactive = { c = { fg = colors.fg, bg = colors.bg } },
+          },
           section_separators = "",
           component_separators = "",
           globalstatus = true,
-          disabled_filetypes = { statusline = { "dashboard", "alpha" } },
+          disabled_filetypes = { statusline = { "dashboard", "alpha", "toggleterm" } },
         },
         sections = {
           lualine_a = {},
@@ -121,7 +127,7 @@ return {
         "filename",
         path = 1,
         symbols = { modified = "  ", readonly = "", unnamed = "" },
-        padding = { left = 1 },
+        padding = { right = 1, left = 1 },
       })
 
       ins_left({ "location", padding = { right = 1 } })
@@ -208,13 +214,13 @@ return {
         padding = { left = 1, right = 0 },
       })
 
-      ins_right({
-        function()
-          return " " .. os.date("%I:%M %p")
-        end,
-        padding = { left = 1 },
-      })
-
+      -- ins_right({
+      --   function()
+      --     return " " .. os.date("%I:%M %p")
+      --   end,
+      --   padding = { left = 1 },
+      -- })
+      --
       ins_right({
         function()
           return "▊"
