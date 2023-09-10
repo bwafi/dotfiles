@@ -1,5 +1,4 @@
 return {
-
   -- change neo-tree config
   {
     "nvim-neo-tree/neo-tree.nvim",

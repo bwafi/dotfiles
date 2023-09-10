@@ -33,4 +33,4 @@ map("i", "jj", "<esc>", { noremap = true })
 -- end)
 
 -- close all buffers
-map("n", "<leader>bo", "<cmd>%bd|e#<cr>", { desc = "Close all buffers but the current one" })
+map("n", "<leader>bo", "<cmd>%bd|e#|bd#<cr>", { desc = "Close all buffers but the current one" })

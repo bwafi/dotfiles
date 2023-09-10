@@ -5,6 +5,7 @@ return {
     dependencies = {
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
       { "windwp/nvim-autopairs", config = true },
+      "hrsh7th/cmp-emoji",
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
