@@ -10,7 +10,7 @@ return {
         },
         tsserver = {
           -- Need to disable this cuz `Inline Edit` won't work otherwise
-          autostart = false, -- false if vue project
+          autostart = true, -- false if vue project
           single_file_support = false,
           settings = {
             typescript = {
