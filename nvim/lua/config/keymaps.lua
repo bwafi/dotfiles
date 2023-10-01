@@ -14,6 +14,7 @@ map("n", "<leader>gG", function()
 end, { desc = "Lazygit (cwd dir)" })
 
 map("i", "jj", "<esc>", { noremap = true })
+
 -- map({ "i", "v", "n", "s" }, "<C-j>", "<cmd>w<cr>", { desc = "Save file" })
 -- map("i", "<C-k>", "<cmd>w<cr>", { desc = "save file" })
 -- floating terminal sdv

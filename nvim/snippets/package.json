@@ -2,28 +2,19 @@
   "contributes": {
     "snippets": [
       {
-        "language": "javascript",
-        "path": "./javascript.json"
-      },
-      {
-        "language": "typescript",
-        "path": "./javascript.json"
-      },
-      {
-        "language": "javascriptreact",
-        "path": "./javascript.json"
-      },
-      {
-        "language": "typescriptreact",
+        "language": [
+          "javascript",
+          "typescript",
+          "javascriptreact",
+          "typescriptreact",
+          "html",
+          "vue"
+        ],
         "path": "./javascript.json"
       },
       {
         "language": "html",
-        "path": "./javascript.json"
-      },
-      {
-        "language": "vue",
-        "path": "./javascript.json"
+        "path": "./ejs.json"
       }
     ]
   }

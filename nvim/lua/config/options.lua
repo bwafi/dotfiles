@@ -9,6 +9,7 @@ local opt = vim.opt
 opt.autoindent = true -- Copy indent from current line when starting a new line (When <CR> or 'o' or 'O')
 opt.smarttab = true -- When on, a <Tab> in front of a line inserts blanks according to 'shiftwidth'
 opt.smartindent = true
+-- opt.updatetime = 100
 opt.encoding = "utf-8"
 opt.fileencoding = "utf-8"
 opt.breakindent = true

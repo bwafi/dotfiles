@@ -6,6 +6,8 @@ return {
         query = {
           javascript = "rainbow-parens",
           tsx = "rainbow-parens",
+          html = "rainbow-parens",
+          vue = "rainbow_delimiters",
         },
         highlight = {
           "RainbowDelimiterBlue",
