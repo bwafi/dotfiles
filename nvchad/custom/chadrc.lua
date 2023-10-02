@@ -15,7 +15,7 @@ M.ui = {
   },
   -- transparency = true,
   statusline = {
-    theme = "minimal", -- default/vscode/vscode_colored/minimal
+    theme = "vscode_colored", -- default/vscode/vscode_colored/minimal
 
     -- default/round/block/arrow (separators work only for "default" statusline theme;
     -- round and block will work for the minimal theme only)
@@ -25,6 +25,9 @@ M.ui = {
   telescope = {
     style = "bordered",
   },
+
+  lsp = { signature = { disabled = false } },
+  -- cmp = { lspkind = false },
 }
 
 M.plugins = "custom.plugins"

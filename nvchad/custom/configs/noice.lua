@@ -36,7 +36,7 @@ noice.setup {
       view = "mini",
     },
     {
-       filter = {
+      filter = {
         event = "notify",
         find = "No information available",
       },

@@ -25,5 +25,3 @@ lspconfig.jsonls.setup {
 }
 
 -- lspconfig.pyright.setup { blabla}
-
--- vim.notify = require("noice").notify

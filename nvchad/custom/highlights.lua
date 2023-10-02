@@ -9,15 +9,15 @@ M.override = {
   Comment = {
     italic = true,
   },
+  CursorLine = { bg = "black2" },
 
   --Telescope highlights
   TelescopePromptBorder = { fg = "one_bg3" },
   TelescopeBorder = { fg = "one_bg3" },
 
-  CursorLine = { bg = "black2" },
-
   -- blank line highlights
   IndentBlanklineContextChar = { fg = "cyan" },
+  FoldColumn = { bg = "black" },
 }
 
 ---@type HLTable

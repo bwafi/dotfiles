@@ -113,7 +113,9 @@ M.mason = {
     "gopls",
     "gofumpt",
     "goimports",
+    "delve",
     "golangci-lint",
+    "goimports-revise",
     "golines",
   },
 }
@@ -157,7 +159,7 @@ M.blankline = {
   show_first_indent_level = true,
   show_current_context = true,
   show_current_context_start = false,
-  use_treesitter = true,
+  -- use_treesitter = true,
   context_patterns = {
     "class",
     "return",

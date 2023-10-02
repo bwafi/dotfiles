@@ -6,6 +6,8 @@ oil.setup {
     ["g?"] = "actions.show_help",
     ["<CR>"] = "actions.select",
     ["<C-p>"] = "actions.preview",
+    ["<C-s>"] = "actions.save",
+    ["<C-S>"] = "actions.select_vsplit",
     ["q"] = "actions.close",
     ["<C-l>"] = "actions.refresh",
     ["-"] = "actions.parent",

@@ -51,7 +51,6 @@ local plugins = {
     opts = overrides.blankline,
   },
 
-  
   {
     "hrsh7th/nvim-cmp",
     opts = overrides.cmp,
@@ -80,22 +79,6 @@ local plugins = {
   },
 
   -- Install a plugin
-
-  -- formatter and linter
-  -- {
-  --   "mhartington/formatter.nvim",
-  --   event = "VeryLazy",
-  --   opts = function()
-  --     return require "custom.configs.formatter"
-  --   end,
-  -- },
-  -- {
-  --   "mfussenegger/nvim-lint",
-  --   event = "VeryLazy",
-  --   config = function()
-  --     require "custom.configs.lint"
-  --   end,
-  -- },
 
   {
     "max397574/better-escape.nvim",
@@ -137,83 +120,31 @@ local plugins = {
   },
 
   -- debugging
-
   {
-    "mfussenegger/nvim-dap",
-
+    "rcarriga/nvim-dap-ui",
+    event = "VeryLazy",
     dependencies = {
-
-      -- fancy UI for the debugger
       {
-        "rcarriga/nvim-dap-ui",
-      -- stylua: ignore
-      keys = {
-        { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
-        { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
-      },
-        opts = {},
-        config = function(_, opts)
-          -- setup dap config by VsCode launch.json file
-          -- require("dap.ext.vscode").load_launchjs()
-          local dap = require "dap"
-          local dapui = require "dapui"
-          dapui.setup(opts)
-          dap.listeners.after.event_initialized["dapui_config"] = function()
-            dapui.open {}
-          end
-          dap.listeners.before.event_terminated["dapui_config"] = function()
-            dapui.close {}
-          end
-          dap.listeners.before.event_exited["dapui_config"] = function()
-            dapui.close {}
-          end
+        "mfussenegger/nvim-dap",
+        config = function()
+          require "custom.configs.dapui"
         end,
       },
-
-      -- virtual text for the debugger
       {
         "theHamsta/nvim-dap-virtual-text",
         opts = {},
       },
-
-      -- mason.nvim integration
-      {
-        "jay-babu/mason-nvim-dap.nvim",
-        dependencies = "mason.nvim",
-        cmd = { "DapInstall", "DapUninstall" },
-        opts = {
-          automatic_installation = true,
-          handlers = {},
-          ensure_installed = {},
-        },
-      },
     },
-
-  -- stylua: ignore
-    init = function ()
-      require("core.utils").load_mappings "dap"
-    end,
-
     config = function()
-      local icons = {
-        dap = {
-          Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-          Breakpoint = " ",
-          BreakpointCondition = " ",
-          BreakpointRejected = { " ", "DiagnosticError" },
-          LogPoint = ".>",
-        },
-      }
+      require "custom.configs.dapui"
+    end,
+  },
 
-      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
-
-      for name, sign in pairs(icons.dap) do
-        sign = type(sign) == "table" and sign or { sign }
-        vim.fn.sign_define(
-          "Dap" .. name,
-          { text = sign[1], texthl = sign[2] or "DiagnosticInfo", linehl = sign[3], numhl = sign[3] }
-        )
-      end
+  {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require "custom.configs.dap"
+      require("core.utils").load_mappings "dap"
     end,
   },
 
@@ -232,89 +163,8 @@ local plugins = {
     "hrsh7th/cmp-cmdline",
     event = "VeryLazy",
     config = function()
-      local cmp = require "cmp"
-      local mapping = {
-        ["<CR>"] = cmp.mapping.confirm { select = true },
-        ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-        ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-        ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-        ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-      }
-
-      -- Use buffer source for `/`.
-      cmp.setup.cmdline("/", {
-        preselect = "none",
-        completion = {
-          completeopt = "menu,preview,menuone,noselect",
-        },
-        mapping = mapping,
-        sources = {
-          { name = "buffer" },
-        },
-        experimental = {
-          ghost_text = true,
-          native_menu = false,
-        },
-      })
-
-      -- Use cmdline & path source for ':'.
-      cmp.setup.cmdline(":", {
-        preselect = "none",
-        completion = {
-          completeopt = "menu,preview,menuone,noselect",
-        },
-        mapping = mapping,
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, {
-          { name = "cmdline" },
-        }),
-        experimental = {
-          ghost_text = true,
-          native_menu = false,
-        },
-      })
+      require "custom.configs.cmp-cmdline"
     end,
-  },
-
-  -- yanky
-  {
-    "gbprod/yanky.nvim",
-    opts = function()
-      local mapping = require "yanky.telescope.mapping"
-      local mappings = mapping.get_defaults()
-      mappings.i["<c-p>"] = nil
-      return {
-        highlight = { timer = 200 },
-        picker = {
-          telescope = {
-            use_default_mappings = false,
-            mappings = mappings,
-          },
-        },
-      }
-    end,
-    keys = {
-      -- stylua: ignore
-    { "<leader>pp", function() require("telescope").extensions.yank_history.yank_history({ }) end, desc = "Open Yank History" },
-      { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank text" },
-      { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put yanked text after cursor" },
-      { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before cursor" },
-      { "gp", "<Plug>(YankyGPutAfter)", mode = { "n", "x" }, desc = "Put yanked text after selection" },
-      { "gP", "<Plug>(YankyGPutBefore)", mode = { "n", "x" }, desc = "Put yanked text before selection" },
-      { "[y", "<Plug>(YankyCycleForward)", desc = "Cycle forward through yank history" },
-      { "]y", "<Plug>(YankyCycleBackward)", desc = "Cycle backward through yank history" },
-      { "]p", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Put indented after cursor (linewise)" },
-      { "[p", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Put indented before cursor (linewise)" },
-      { "]P", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Put indented after cursor (linewise)" },
-      { "[P", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Put indented before cursor (linewise)" },
-      { ">p", "<Plug>(YankyPutIndentAfterShiftRight)", desc = "Put and indent right" },
-      { "<p", "<Plug>(YankyPutIndentAfterShiftLeft)", desc = "Put and indent left" },
-      { ">P", "<Plug>(YankyPutIndentBeforeShiftRight)", desc = "Put before and indent right" },
-      { "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)", desc = "Put before and indent left" },
-      { "=p", "<Plug>(YankyPutAfterFilter)", desc = "Put after applying a filter" },
-      { "=P", "<Plug>(YankyPutBeforeFilter)", desc = "Put before applying a filter" },
-    },
   },
 
   -- bracket rainbow
@@ -358,7 +208,6 @@ local plugins = {
   },
 
   -- nvim surround
-
   {
     "kylechui/nvim-surround",
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -371,13 +220,12 @@ local plugins = {
   },
 
   -- highlight under cursor
-
   {
     "echasnovski/mini.cursorword",
     version = false,
     init = function()
       require("mini.cursorword").setup {
-        delay = 100,
+        -- delay = 100,
       }
     end,
   },
@@ -388,62 +236,39 @@ local plugins = {
     version = false, -- last release is way too old
   },
 
-  -- test
+  -- neotest
   {
     "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "haydenmeade/neotest-jest",
+      "marilari88/neotest-vitest",
+      "nvim-neotest/neotest-go",
+    },
     opts = {
-      -- Can be a list of adapters like what neotest expects,
-      -- or a list of adapter names,
-      -- or a table of adapter names, mapped to adapter configs.
-      -- The adapter will then be automatically loaded with the config.
-      adapters = {},
-      -- Example for loading neotest-go with a custom config
-      -- adapters = {
-      --   ["neotest-go"] = {
-      --     args = { "-tags=integration" },
-      --   },
-      -- },
+      adapters = {
+        ["neotest-jest"] = {
+          jestCommand = "npm test --",
+          jestConfigFile = "custom.jest.config.ts",
+          env = { CI = true },
+          cwd = function(path)
+            return vim.fn.getcwd()
+          end,
+        },
+        ["neotest-vitest"] = {},
+        ["neotest-go"] = {
+          -- args = { "-tags=integration" },
+        },
+      },
       status = { virtual_text = true },
       output = { open_on_run = true },
       quickfix = {
         open = function()
-          if require "trouble" then
-            vim.cmd "Trouble quickfix"
-          else
-            vim.cmd "copen"
-          end
+          vim.cmd "Trouble quickfix"
         end,
       },
     },
     config = function(_, opts)
-      -- quit with q
-      local group = vim.api.nvim_create_augroup("NeotestConfig", {})
-      for _, ft in ipairs { "output", "attach", "summary" } do
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = "neotest-" .. ft,
-          group = group,
-          callback = function(opts)
-            vim.keymap.set("n", "q", function()
-              pcall(vim.api.nvim_win_close, 0, true)
-            end, {
-              buffer = opts.buf,
-            })
-          end,
-        })
-      end
-
-      -- diagnostic
-      local neotest_ns = vim.api.nvim_create_namespace "neotest"
-      vim.diagnostic.config({
-        virtual_text = {
-          format = function(diagnostic)
-            -- Replace newline and tab characters with space for more compact diagnostics
-            local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-            return message
-          end,
-        },
-      }, neotest_ns)
-
       if opts.adapters then
         local adapters = {}
         for name, config in pairs(opts.adapters or {}) do
@@ -473,52 +298,40 @@ local plugins = {
       require("neotest").setup(opts)
     end,
   -- stylua: ignore
-  keys = {
-    { "<leader>tt", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Run File" },
-    { "<leader>tT", function() require("neotest").run.run(vim.loop.cwd()) end, desc = "Run All Test Files" },
-    { "<leader>tr", function() require("neotest").run.run() end, desc = "Run Nearest" },
-    { "<leader>ts", function() require("neotest").summary.toggle() end, desc = "Toggle Summary" },
-    { "<leader>to", function() require("neotest").output.open({ enter = true, auto_close = true }) end, desc = "Show Output" },
-    { "<leader>tO", function() require("neotest").output_panel.toggle() end, desc = "Toggle Output Panel" },
-    { "<leader>tS", function() require("neotest").run.stop() end, desc = "Stop" },
+  init = function (_)
+    require("core.utils").load_mappings("neotest")
+  end,
   },
+
+  --ufo
+
+  {
+    "kevinhwang91/nvim-ufo",
+    event = "BufReadPost",
+    dependencies = {
+      "kevinhwang91/promise-async",
+      {
+        "luukvbaal/statuscol.nvim",
+        config = function()
+          require("custom.configs.ufo").statuscol()
+        end,
+      },
+    },
+    config = function()
+      require("custom.configs.ufo").ufo()
+      require("core.utils").load_mappings "ufo"
+    end,
   },
 
   {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "haydenmeade/neotest-jest",
-      "marilari88/neotest-vitest",
+    "anuvyklack/fold-preview.nvim",
+    event = "VimEnter",
+    config = true,
+    dependencies = "anuvyklack/keymap-amend.nvim",
+    opts = {
+      -- auto = 1,
+      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
     },
-    keys = {
-      {
-        "<leader>tl",
-        function()
-          require("neotest").run.run_last()
-        end,
-        desc = "Run Last Test",
-      },
-
-      {
-        "<leader>tw",
-        "<cmd>lua require('neotest').run.run({ jestCommand = 'jest --watch ' })<cr>",
-        desc = "Run Watch",
-      },
-    },
-    opts = function(_, opts)
-      table.insert(
-        opts.adapters,
-        require "neotest-jest" {
-          jestCommand = "npm test --",
-          jestConfigFile = "custom.jest.config.ts",
-          env = { CI = true },
-          cwd = function()
-            return vim.fn.getcwd()
-          end,
-        }
-      )
-      table.insert(opts.adapters, require "neotest-vitest")
-    end,
   },
 
   -- To make a plugin not be loaded

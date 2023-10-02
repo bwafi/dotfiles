@@ -23,7 +23,7 @@ local sources = {
   b.formatting.prettierd,
 
   -- Lua
-  b.formatting.stylua.with{filetypes = {"lua"}},
+  b.formatting.stylua,
 
   -- go
   b.formatting.gofumpt,

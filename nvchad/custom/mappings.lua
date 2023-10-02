@@ -28,6 +28,12 @@ M.general = {
     ["<leader>|"] = { "<C-W>v", "Split  window right" },
     ["<leader>-"] = { "<C-W>s", "Split  window left" },
     ["<leader>wd"] = { "<C-W>c", "Delete window" },
+
+    -- move Cursor windows
+    ["<C-h>"] = { "<C-W>h", "Go to left window" },
+    ["<C-j>"] = { "<C-W>j", "Go to lower window" },
+    ["<C-k>"] = { "<C-W>k", "Go to upper window" },
+    ["<C-l>"] = { "<C-W>l", "Go to right window" },
   },
 
   i = {
@@ -76,6 +82,12 @@ M.telescope = {
     ["<leader>fs"] = { "<cmd>lsp_document_symbols<cr>", "Goto Symbol" },
     ["<leader>fS"] = { "<cmd>lsp_dynamic_workspace_symbols<cr>", "Goto Symbol (Workspace)" },
     ["<leader>ut"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
+    ["<leader>pp"] = {
+      function()
+        require("telescope").extensions.yank_history.yank_history {}
+      end,
+      "Open Yank History",
+    },
   },
 }
 
@@ -87,7 +99,7 @@ M.nvimtree = {
     ["<leader>e"] = { "<cmd>NvimTreeToggle<CR>", "Toggle nvimtree" },
 
     -- focus
-    ["<C-h>"] = { "<cmd>NvimTreeFocus<CR>", "Focus nvimtree" },
+    -- ["<C-h>"] = { "<cmd>NvimTreeFocus<CR>", "Focus nvimtree" },
   },
 }
 
@@ -197,6 +209,54 @@ M.dap_go = {
   },
 }
 
+M.neotest = {
+  plugin = true,
+  n = {
+    ["<leader>tt"] = {
+      function()
+        require("neotest").run.run(vim.fn.expand "%")
+      end,
+      "Run File",
+    },
+    ["<leader>tT"] = {
+      function()
+        require("neotest").run.run(vim.loop.cwd())
+      end,
+      "Run All Test Files",
+    },
+    ["<leader>tr"] = {
+      function()
+        require("neotest").run.run()
+      end,
+      "Run Nearest",
+    },
+    ["<leader>ts"] = {
+      function()
+        require("neotest").summary.toggle()
+      end,
+      "Toggle summary",
+    },
+    ["<leader>to"] = {
+      function()
+        require("neotest").output.open { enter = true, auto_close = true }
+      end,
+      "Show Output",
+    },
+    ["<leader>tO"] = {
+      function()
+        require("neotest").output_panel.toggle()
+      end,
+      "Toggle Output Panel",
+    },
+    ["<leader>tS"] = {
+      function()
+        require("neotest").run.stop()
+      end,
+      "Stop",
+    },
+  },
+}
+
 M.noice = {
   plugin = true,
 
@@ -292,6 +352,42 @@ M.trouble = {
       end,
       "Next trouble/quickfix item",
     },
+  },
+}
+
+M.ufo = {
+  plugin = true,
+  n = {
+    ["zR"] = {
+      function()
+        require("ufo").openAllFolds()
+      end,
+      "Open all folds",
+    },
+
+    ["zM"] = {
+      function()
+        require("ufo").closeAllFolds()
+      end,
+      "Close all folds",
+    },
+
+    ["T"] = {
+      function()
+        local winid = require("ufo").peekFoldedLinesUnderCursor()
+        if not winid then
+          vim.lsp.buf.hover()
+        end
+      end,
+      "Hover Fold LSP",
+    },
+  },
+}
+
+M.yanky = {
+  plugin = true,
+  n = {
+    ["y"] = { "<Plug>(YankyYank)", "Yank text" },
   },
 }
 
