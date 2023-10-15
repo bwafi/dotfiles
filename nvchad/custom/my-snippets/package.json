@@ -11,15 +11,6 @@
           "vue"
         ],
         "path": "./snippets/javascript.json"
-      },
-      {
-        "language": [
-          "javascript",
-          "typescript",
-          "javascriptreact",
-          "typescriptreact"
-        ],
-        "path": "./snippets/testjavascript.json"
       }
     ]
   }

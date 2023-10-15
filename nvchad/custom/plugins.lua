@@ -1,5 +1,5 @@
 local overrides = require "custom.configs.overrides"
-
+--
 ---@type NvPluginSpec[]
 local plugins = {
 
@@ -8,12 +8,16 @@ local plugins = {
     "neovim/nvim-lspconfig",
     dependencies = {
       -- format & linting
-      {
-        "jose-elias-alvarez/null-ls.nvim",
-        config = function()
-          require "custom.configs.null-ls"
-        end,
-      },
+      -- {
+      --   "nvimtools/none-ls.nvim",
+      --   config = function()
+      --     require "custom.configs.null-ls"
+      --   end,
+      -- },
+      { "b0o/schemastore.nvim" },
+      { "folke/neodev.nvim" },
+      -- { "nvimdev/lspsaga.nvim" },
+      { "pmizio/typescript-tools.nvim" },
     },
     config = function()
       require "plugins.configs.lspconfig"
@@ -26,12 +30,13 @@ local plugins = {
     "williamboman/mason.nvim",
     opts = overrides.mason,
   },
-
   {
+
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
+      "windwp/nvim-ts-autotag",
       "hiphish/rainbow-delimiters.nvim",
-      "nvim-treesitter/nvim-treesitter-textobjects",
+      -- "nvim-treesitter/nvim-treesitter-textobjects",
     },
     opts = overrides.treesitter,
   },
@@ -48,12 +53,41 @@ local plugins = {
 
   {
     "lukas-reineke/indent-blankline.nvim",
-    opts = overrides.blankline,
+    opts = {
+      show_trailing_blankline_indent = false,
+      show_first_indent_level = true,
+      show_current_context = false,
+      show_current_context_start = true,
+    },
   },
 
   {
     "hrsh7th/nvim-cmp",
     opts = overrides.cmp,
+    dependencies = {
+      {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        -- enabled = false,
+        opts = {
+          map_bs = false, -- map the <BS> key
+          map_c_h = true, -- Map the <C-h> key to delete a pair
+        },
+      },
+    },
+    {
+      -- snippet plugin
+      "L3MON4D3/LuaSnip",
+      config = function()
+        local luasnip = require "luasnip"
+        luasnip.filetype_extend("javascriptreact", { "html" })
+        luasnip.filetype_extend("typescriptreact", { "html" })
+        require("luasnip.loaders.from_vscode").lazy_load()
+        require("luasnip.loaders.from_vscode").lazy_load {
+          paths = vim.fn.stdpath "config" .. "/lua/custom/my-snippets",
+        }
+      end,
+    },
   },
 
   {
@@ -92,12 +126,10 @@ local plugins = {
     "stevearc/dressing.nvim",
     lazy = true,
     init = function()
-      ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
         require("lazy").load { plugins = { "dressing.nvim" } }
         return vim.ui.select(...)
       end
-      ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.input = function(...)
         require("lazy").load { plugins = { "dressing.nvim" } }
         return vim.ui.input(...)
@@ -110,7 +142,19 @@ local plugins = {
     "folke/noice.nvim",
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
+      {
+        "rcarriga/nvim-notify",
+        opts = {
+          -- render = "wrapped-compact",
+          -- top_down = false,
+          max_width = 55,
+          minimum_width = 15,
+          level = vim.log.levels.TRACE, -- minimum severity level
+          timeout = 4000,
+          stages = "slide", -- slide|fade
+          icons = { DEBUG = "", ERROR = "", INFO = "", TRACE = "", WARN = "" },
+        },
+      },
     },
     event = "BufWinEnter",
     config = function()
@@ -188,10 +232,10 @@ local plugins = {
   {
     "mg979/vim-visual-multi",
     branch = "master",
-    event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      vim.g.VM_mouse_mappings = 1
-      vim.g.VM_theme = "purplegray"
+    lazy = false,
+    init = function()
+      -- theme : codedark, iceblue, purplegray, spacegray, ocean, nord, neon, papper
+      vim.g.VM_theme = "iceblue"
     end,
   },
 
@@ -222,18 +266,11 @@ local plugins = {
   -- highlight under cursor
   {
     "echasnovski/mini.cursorword",
-    version = false,
     init = function()
       require("mini.cursorword").setup {
         -- delay = 100,
       }
     end,
-  },
-
-  -- json
-  {
-    "b0o/SchemaStore.nvim",
-    version = false, -- last release is way too old
   },
 
   -- neotest
@@ -245,69 +282,19 @@ local plugins = {
       "marilari88/neotest-vitest",
       "nvim-neotest/neotest-go",
     },
-    opts = {
-      adapters = {
-        ["neotest-jest"] = {
-          jestCommand = "npm test --",
-          jestConfigFile = "custom.jest.config.ts",
-          env = { CI = true },
-          cwd = function(path)
-            return vim.fn.getcwd()
-          end,
-        },
-        ["neotest-vitest"] = {},
-        ["neotest-go"] = {
-          -- args = { "-tags=integration" },
-        },
-      },
-      status = { virtual_text = true },
-      output = { open_on_run = true },
-      quickfix = {
-        open = function()
-          vim.cmd "Trouble quickfix"
-        end,
-      },
-    },
-    config = function(_, opts)
-      if opts.adapters then
-        local adapters = {}
-        for name, config in pairs(opts.adapters or {}) do
-          if type(name) == "number" then
-            if type(config) == "string" then
-              config = require(config)
-            end
-            adapters[#adapters + 1] = config
-          elseif config ~= false then
-            local adapter = require(name)
-            if type(config) == "table" and not vim.tbl_isempty(config) then
-              local meta = getmetatable(adapter)
-              if adapter.setup then
-                adapter.setup(config)
-              elseif meta and meta.__call then
-                adapter(config)
-              else
-                error("Adapter " .. name .. " does not support setup")
-              end
-            end
-            adapters[#adapters + 1] = adapter
-          end
-        end
-        opts.adapters = adapters
-      end
-
-      require("neotest").setup(opts)
+    config = function()
+      require "custom.configs.neotest"
     end,
-  -- stylua: ignore
-  init = function (_)
-    require("core.utils").load_mappings("neotest")
-  end,
+    init = function(_)
+      require("core.utils").load_mappings "neotest"
+    end,
   },
 
-  --ufo
-
+  -- folded ui
   {
     "kevinhwang91/nvim-ufo",
-    event = "BufReadPost",
+    event = "VimEnter",
+    -- event = "BufReadPost",
     dependencies = {
       "kevinhwang91/promise-async",
       {
@@ -332,6 +319,176 @@ local plugins = {
       -- auto = 1,
       border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
     },
+  },
+
+  -- mini animate
+  {
+    "echasnovski/mini.animate",
+    event = "VeryLazy",
+    config = function()
+      require "custom.configs.mini-animate"
+    end,
+  },
+
+  -- mini operators
+  {
+    "echasnovski/mini.operators",
+    init = function()
+      require("mini.operators").setup()
+    end,
+  },
+
+  -- tab out
+  {
+    "abecodes/tabout.nvim",
+    event = "VeryLazy",
+    config = function()
+      require "custom.configs.tabout"
+    end,
+  },
+
+  -- rest nvim http
+  {
+    "rest-nvim/rest.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require "custom.configs.rest"
+      -- keys mappings
+    end,
+  },
+
+  -- undotree
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    keys = {
+      { "<leader>fu", "<cmd>UndotreeToggle<cr>", desc = "Undo tree" },
+    },
+  },
+
+  -- lsp saga
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    config = function()
+      require "custom.configs.lspsaga"
+    end,
+  },
+
+  -- mini pairs for delete because auto pairs conflict <BS> with vim-visual-multi
+  {
+    "echasnovski/mini.pairs",
+    event = "VeryLazy",
+    init = function()
+      require("mini.pairs").setup {
+        -- modes = { insert = false, command = false, terminal = false },
+        mappings = {
+          ["("] = {},
+          ["["] = {},
+          ["{"] = {},
+
+          [")"] = {},
+          ["]"] = {},
+          ["}"] = {},
+
+          ['"'] = {},
+          ["'"] = {},
+          ["`"] = {},
+        },
+      }
+    end,
+  },
+
+  -- todo
+  {
+    "folke/todo-comments.nvim",
+    cmd = { "TodoTrouble", "TodoTelescope" },
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = true,
+  -- stylua: ignore
+    keys = {
+    { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
+    { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
+    { "<leader>xt", "<cmd>TodoTrouble<cr>", desc = "Todo (Trouble)" },
+    { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
+    { "<leader>st", "<cmd>TodoTelescope<cr>", desc = "Todo" },
+    { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
+  },
+  },
+
+  -- flash jump
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {},
+  -- stylua: ignore
+  keys = {
+    { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+    { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  },
+  },
+
+  -- cutlass
+  {
+    "gbprod/cutlass.nvim",
+    event = "BufReadPost",
+    opts = {
+      cut_key = "x",
+      override_del = true,
+      exclude = {},
+      registers = {
+        select = "_",
+        delete = "_",
+        change = "_",
+      },
+    },
+  },
+
+  -- treesj toggle join
+  {
+    "Wansmer/treesj",
+    cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      use_default_keymaps = false,
+    },
+    keys = {
+      { "<leader>m", "<CMD>TSJToggle<CR>", desc = "Toggle Treesitter Join" },
+    },
+  },
+
+  --markdown preview
+  {
+    "iamcco/markdown-preview.nvim",
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    keys = {
+      { "<C-p>", "<Plug>MarkdownPreviewToggle", desc = "Toggle markdown preview" },
+    },
+  },
+
+  {
+    "echasnovski/mini.indentscope",
+    version = false, -- wait till new 0.7.0 release to put it back on semver
+    event = "VeryLazy",
+    init = function()
+      require "custom.configs.mini-indentscope"
+    end,
+  },
+
+  -- formatting with conform
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    init = function()
+      require "custom.configs.conform"
+    end,
   },
 
   -- To make a plugin not be loaded

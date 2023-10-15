@@ -7,19 +7,6 @@ local sources = {
   -- webdev stuff
   -- b.formatting.deno_fmt, -- choosed deno for ts/js files cuz its very fast!
   -- b.formatting.prettier.with { filetypes = { "html", "markdown", "css" } }, -- so prettier works only on these filetypes
-  -- b.formatting.prettierd.with {
-  --   filetypes = {
-  --     "html",
-  --     "css",
-  --     "javascript",
-  --     "javascriptreact",
-  --     "typescript",
-  --     "typescriptreact",
-  --     "json",
-  --     "vue",
-  --     "YAML",
-  --   },
-  -- },
   b.formatting.prettierd,
 
   -- Lua
@@ -29,16 +16,26 @@ local sources = {
   b.formatting.gofumpt,
   b.formatting.goimports_reviser,
   b.formatting.golines,
-}
 
+  -- sql
+  b.formatting.sql_formatter,
+}
 null_ls.setup {
   debug = true,
   sources = sources,
-  on_attach = function()
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      callback = function()
-        vim.lsp.buf.format()
-      end,
-    })
+
+  -- format on save https://github.com/jose-elias-alvarez/null-ls.nvim/wiki/Formatting-on-save
+  on_attach = function(client, bufnr)
+    local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+    if client.supports_method "textDocument/formatting" then
+      vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = augroup,
+        buffer = bufnr,
+        callback = function()
+          vim.lsp.buf.format { bufnr = bufnr }
+        end,
+      })
+    end
   end,
 }

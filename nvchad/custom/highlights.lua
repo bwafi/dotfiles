@@ -11,22 +11,33 @@ M.override = {
   },
   CursorLine = { bg = "black2" },
 
+  -- nvdash highlight
+  NvDashAscii = { fg = "pink", bg = "black" },
+  NvDashButtons = { bg = "black" },
+
   --Telescope highlights
   TelescopePromptBorder = { fg = "one_bg3" },
   TelescopeBorder = { fg = "one_bg3" },
 
-  -- blank line highlights
-  IndentBlanklineContextChar = { fg = "cyan" },
-  FoldColumn = { bg = "black" },
+  --  fold color
+  FoldColumn = { bg = "black", fg = "grey_fg" },
 }
 
 ---@type HLTable
 M.add = {
   NvimTreeOpenedFolderName = { fg = "green", bold = true },
 
+  -- tabline vim-visual_multi
+  TabLine = { fg = "white" },
+
+  -- add cursor line fold
+  CursorLineFold = { fg = "white" },
+
   -- highlights under cursor
   MiniCursorWord = { bg = "one_bg3" },
   MiniCursorWordCurrent = { bg = "one_bg3" },
+
+  -- SagaWinbarSep = { fg = "cyan" },
 }
 
 return M

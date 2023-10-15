@@ -11,10 +11,14 @@ M.treesitter = {
     "typescript",
     "javascript",
     "tsx",
+    "http",
     "vue",
     "go",
+    "prisma",
     "php",
     "markdown",
+    "markdown_inline",
+    "regex",
   },
 
   indent = {
@@ -30,64 +34,64 @@ M.treesitter = {
     max_file_lines = 1000,
   },
 
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-      keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
-        ["aa"] = "@parameter.outer",
-        ["ia"] = "@parameter.inner",
-        ["af"] = "@function.outer",
-        ["if"] = "@function.inner",
-        ["ac"] = "@class.outer",
-        ["ic"] = "@class.inner",
-        ["ii"] = "@conditional.inner",
-        ["ai"] = "@conditional.outer",
-        ["il"] = "@loop.inner",
-        ["al"] = "@loop.outer",
-        ["at"] = "@comment.outer",
-        ["ab"] = "@block.inner",
-        ["ib"] = "@block.outer",
-        ["is"] = "@scopename.inner",
-      },
-    },
-    move = {
-      enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
-      -- goto_next = {
-      --   [']i'] = "@conditional.inner",
-      -- },
-      -- goto_previous = {
-      --   ['[i'] = "@conditional.inner",
-      -- }
-    },
-    swap = {
-      enable = true,
-      swap_next = {
-        ["<leader>a"] = "@parameter.inner",
-      },
-      swap_previous = {
-        ["<leader>A"] = "@parameter.inner",
-      },
-    },
-  },
+  -- textobjects = {
+  --   select = {
+  --     enable = true,
+  --     lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+  --     keymaps = {
+  --       -- You can use the capture groups defined in textobjects.scm
+  --       ["aa"] = "@parameter.outer",
+  --       ["ia"] = "@parameter.inner",
+  --       ["af"] = "@function.outer",
+  --       ["if"] = "@function.inner",
+  --       ["ac"] = "@class.outer",
+  --       ["ic"] = "@class.inner",
+  --       ["ii"] = "@conditional.inner",
+  --       ["ai"] = "@conditional.outer",
+  --       ["il"] = "@loop.inner",
+  --       ["al"] = "@loop.outer",
+  --       ["at"] = "@comment.outer",
+  --       ["ab"] = "@block.inner",
+  --       ["ib"] = "@block.outer",
+  --       ["is"] = "@scopename.inner",
+  --     },
+  --   },
+  --   move = {
+  --     enable = true,
+  --     set_jumps = true, -- whether to set jumps in the jumplist
+  --     goto_next_start = {
+  --       ["]m"] = "@function.outer",
+  --       ["]]"] = "@class.outer",
+  --     },
+  --     goto_next_end = {
+  --       ["]M"] = "@function.outer",
+  --       ["]["] = "@class.outer",
+  --     },
+  --     goto_previous_start = {
+  --       ["[m"] = "@function.outer",
+  --       ["[["] = "@class.outer",
+  --     },
+  --     goto_previous_end = {
+  --       ["[M"] = "@function.outer",
+  --       ["[]"] = "@class.outer",
+  --     },
+  -- goto_next = {
+  --   [']i'] = "@conditional.inner",
+  -- },
+  -- goto_previous = {
+  --   ['[i'] = "@conditional.inner",
+  -- }
+  -- },
+  -- swap = {
+  --   enable = true,
+  --   swap_next = {
+  --     ["<leader>a"] = "@parameter.inner",
+  --   },
+  --   swap_previous = {
+  --     ["<leader>A"] = "@parameter.inner",
+  --   },
+  -- },
+  -- },
 }
 
 M.mason = {
@@ -98,24 +102,27 @@ M.mason = {
 
     -- web dev stuff
     "css-lsp",
-    "html-lsp",
-    "emmet-ls",
+    "emmet-language-server",
+    -- "emmet-ls",
     "typescript-language-server",
     "prettierd",
+    "shfmt",
     "tailwindcss-language-server",
     "eslint-lsp",
-    "shfmt",
+    "prisma-language-server",
     "json-lsp",
     "js-debug-adapter",
     "vue-language-server",
 
+    -- sql
+    "sqlls",
+    "sql-formatter",
+
     -- go
     "gopls",
     "gofumpt",
-    "goimports",
-    "delve",
+    "goimports-reviser",
     "golangci-lint",
-    "goimports-revise",
     "golines",
   },
 }
@@ -128,6 +135,9 @@ M.nvimtree = {
   },
   diagnostics = {
     enable = true,
+  },
+  view = {
+    signcolumn = "no",
   },
   renderer = {
     highlight_git = true,
@@ -151,36 +161,6 @@ M.telescope = {
         prompt_position = "bottom",
       },
     },
-  },
-}
-
-M.blankline = {
-  show_trailing_blankline_indent = false,
-  show_first_indent_level = true,
-  show_current_context = true,
-  show_current_context_start = false,
-  -- use_treesitter = true,
-  context_patterns = {
-    "class",
-    "return",
-    "function",
-    "method",
-    "^if",
-    "^while",
-    "jsx_element",
-    "^for",
-    "^object",
-    "^array",
-    "^table",
-    "block",
-    "arguments",
-    "if_statement",
-    "else_clause",
-    "jsx_element",
-    "jsx_self_closing_element",
-    "try_statement",
-    "catch_clause",
-    "import_statement",
   },
 }
 

@@ -1,19 +1,11 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+fpath=($HOME/.zfunc $fpath)
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -41,6 +33,10 @@ CASE_SENSITIVE="true"
 # zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# adding ssh key to ssh-agent
+# zstyle :omz:plugins:ssh-agent identities ~/.ssh/syahroni ~/.ssh/ssh_key2
+zstyle :omz:plugins:ssh-agent identities ~/.ssh/syahroni
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
@@ -75,7 +71,13 @@ CASE_SENSITIVE="true"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Plugins
-plugins=(git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(tmux frontend-search web-search git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
+# plugins=(git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+
+
+#auto start tmux
+ZSH_TMUX_AUTOSTART=true
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -88,9 +90,9 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
+#   export EDITOR='nvim'
 # else
-#   export EDITOR='mvim'
+#   export EDITOR='nvim'
 # fi
 
 
@@ -100,7 +102,10 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
- alias lazy="cd ~/.config/nvim"
+alias lazy="cd ~/.config/nvim"
+alias nvchad="cd ~/.config/nvim/lua/custom/"
+alias mongostop="sudo systemctl stop mongod"
+alias mongostart="sudo systemctl start mongod"
 
 # global aliases
 alias -g v=nvim
@@ -113,8 +118,20 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
+# nvm
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# bun completions
+[ -s "/home/wapi/.bun/_bun" ] && source "/home/wapi/.bun/_bun"
 
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# fnm
+export PATH="/home/wapi/.local/share/fnm:$PATH"
+eval "`fnm env`"

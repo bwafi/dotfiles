@@ -7,6 +7,9 @@ M.disabled = {
     ["<leader>q"] = "",
     ["<leader>cm"] = "",
     ["<leader>th"] = "",
+    ["<leader>b"] = "", -- disable new buffer
+    ["<C-n>"] = "", -- disable nvimtree
+    ["<leader>ma"] = "",
   },
 }
 
@@ -18,7 +21,7 @@ M.general = {
     ["<leader>l"] = { "<cmd>Lazy<cr>", "Lazy" },
 
     -- Mason
-    ["<leader>ms"] = { "<cmd>Mason<cr>", "Mason" },
+    ["<leader>cm"] = { "<cmd>Mason<cr>", "Mason" },
 
     -- move line
     ["<A-j>"] = { "<cmd>m .+1<cr>==", "Move down" },
@@ -34,6 +37,18 @@ M.general = {
     ["<C-j>"] = { "<C-W>j", "Go to lower window" },
     ["<C-k>"] = { "<C-W>k", "Go to upper window" },
     ["<C-l>"] = { "<C-W>l", "Go to right window" },
+
+    -- Oil nvim
+    ["-"] = { "<CMD>Oil<CR>", "Open parent directory" },
+
+    -- word wrap
+    ["<leader>uw"] = {
+      "<CMD>set wrap!<CR>",
+      "Toggle word wrap",
+      opts = { silent = true, noremap = true, nowait = true },
+    },
+
+    -- ["<leader>r"]
   },
 
   i = {
@@ -64,7 +79,13 @@ M.tabufline = {
       function()
         require("nvchad.tabufline").close_buffer()
       end,
-      "Close buffer",
+      "Closebuffer",
+    },
+    ["<leader>bw"] = {
+      function()
+        require("nvchad.tabufline").closeAllBufs()
+      end,
+      "Close All buffer",
     },
   },
 }
@@ -82,6 +103,7 @@ M.telescope = {
     ["<leader>fs"] = { "<cmd>lsp_document_symbols<cr>", "Goto Symbol" },
     ["<leader>fS"] = { "<cmd>lsp_dynamic_workspace_symbols<cr>", "Goto Symbol (Workspace)" },
     ["<leader>ut"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
+    ["<leader>fc"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
     ["<leader>pp"] = {
       function()
         require("telescope").extensions.yank_history.yank_history {}
@@ -381,13 +403,6 @@ M.ufo = {
       end,
       "Hover Fold LSP",
     },
-  },
-}
-
-M.yanky = {
-  plugin = true,
-  n = {
-    ["y"] = { "<Plug>(YankyYank)", "Yank text" },
   },
 }
 

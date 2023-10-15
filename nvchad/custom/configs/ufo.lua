@@ -3,23 +3,47 @@ local M = {}
 M.statuscol = function()
   local builtin = require "statuscol.builtin"
   require("statuscol").setup {
+    bt_ignore = {
+      "nofile",
+      "prompt",
+      "terminal",
+      "lazy",
+      "nvdash",
+    },
+    ft_ignore = {
+      "Empty",
+      "NvimTree",
+      "nvcheatsheet",
+      "dapui_watches",
+      "dap-repl",
+      "dapui_console",
+      "dapui_stacks",
+      "dapui_breakpoints",
+      "dapui_scopes",
+      "help",
+      "vim",
+      "alpha",
+      "nvdash",
+      "Nvdash",
+      "dashboard",
+      "neo-tree",
+      "Trouble",
+      "noice",
+      "lazy",
+      "toggleterm",
+    },
     relculright = true,
-    -- segments = {
-    --   { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
-    --   { text = { "%s" }, click = "v:lua.ScSa" },
-    --   { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
-    -- },
 
     -- fold column https://github.com/neovim/neovim/pull/17446#issuecomment-1407651883
-     segments = {
-    { text = { "%s" }, click = "v:lua.ScSa" },
-    { text = { builtin.lnumfunc }, click = "v:lua.ScLa", },
-    {
-      text = { " ", builtin.foldfunc, " " },
-      condition = { builtin.not_empty, true, builtin.not_empty },
-      click = "v:lua.ScFa"
+    segments = {
+      { text = { "%s" }, click = "v:lua.ScSa" },
+      { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+      {
+        text = { " ", builtin.foldfunc, " " },
+        condition = { builtin.not_empty, true, builtin.not_empty },
+        click = "v:lua.ScFa",
+      },
     },
-    }
   }
 end
 
@@ -55,9 +79,10 @@ M.ufo = function()
   -- ufo opts
   require("ufo").setup {
     -- fold tesxt custom
+    close_fold_kinds = { "imports" },
     fold_virt_text_handler = handler,
 
-    close_fold_kinds = { "imports" },
+    -- if use Tressiter
     provider_selector = function()
       return { "treesitter", "indent" }
     end,

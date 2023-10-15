@@ -25,7 +25,6 @@ cmp.setup.cmdline(":", {
   },
 })
 
-
 -- Use buffer source for `/`.
 cmp.setup.cmdline("/", {
   preselect = "none",
