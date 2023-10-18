@@ -83,9 +83,9 @@ M.ufo = function()
     fold_virt_text_handler = handler,
 
     -- if use Tressiter
-    provider_selector = function()
-      return { "treesitter", "indent" }
-    end,
+    -- provider_selector = function()
+    --   return { "treesitter", "indent" }
+    -- end,
   }
 end
 

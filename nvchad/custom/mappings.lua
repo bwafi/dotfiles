@@ -406,4 +406,32 @@ M.ufo = {
   },
 }
 
+M.conform = {
+  plugin = true,
+  n = {
+    ["<leader>fm"] = {
+      function()
+        require("conform").format {
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 500,
+        }
+      end,
+      "LSP Formatting (Conform.nvim)",
+    },
+  },
+  v = {
+    ["<leader>fm"] = {
+      function()
+        require("conform").format {
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 500,
+        }
+      end,
+      "LSP Formatting (Conform.nvim)",
+    },
+  },
+}
+
 return M

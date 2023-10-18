@@ -86,6 +86,28 @@ autocmd("FileType", {
   end,
 })
 
+-- show cursor line only in active window
+vim.api.nvim_create_autocmd({ "WinEnter" }, {
+  callback = function()
+    local ok, cl = pcall(vim.api.nvim_win_get_var, 0, "auto-cursorline")
+    if ok and cl then
+      vim.wo.cursorline = true
+      -- vim.wo.miniindentscope_disable = false
+      vim.api.nvim_win_del_var(0, "auto-cursorline")
+    end
+  end,
+})
+vim.api.nvim_create_autocmd({ "WinLeave" }, {
+  callback = function()
+    local cl = vim.wo.cursorline
+    if cl then
+      vim.api.nvim_win_set_var(0, "auto-cursorline", cl)
+      -- vim.wo.miniindentscope_disable = true
+      vim.wo.cursorline = false
+    end
+  end,
+})
+
 -- neotest diagnostic
 local neotest_ns = vim.api.nvim_create_namespace "neotest"
 vim.diagnostic.config({

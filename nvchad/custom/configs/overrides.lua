@@ -102,10 +102,11 @@ M.mason = {
 
     -- web dev stuff
     "css-lsp",
+    "html-lsp",
     "emmet-language-server",
     -- "emmet-ls",
-    "typescript-language-server",
-    "prettierd",
+    -- "typescript-language-server",
+    "prettier",
     "shfmt",
     "tailwindcss-language-server",
     "eslint-lsp",

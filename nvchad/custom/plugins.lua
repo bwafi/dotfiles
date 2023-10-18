@@ -1,9 +1,7 @@
 local overrides = require "custom.configs.overrides"
---
+
 ---@type NvPluginSpec[]
 local plugins = {
-
-  -- Override plugin definition options
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -16,8 +14,7 @@ local plugins = {
       -- },
       { "b0o/schemastore.nvim" },
       { "folke/neodev.nvim" },
-      -- { "nvimdev/lspsaga.nvim" },
-      { "pmizio/typescript-tools.nvim" },
+      { "nvimdev/lspsaga.nvim" },
     },
     config = function()
       require "plugins.configs.lspconfig"
@@ -30,8 +27,8 @@ local plugins = {
     "williamboman/mason.nvim",
     opts = overrides.mason,
   },
-  {
 
+  {
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
       "windwp/nvim-ts-autotag",
@@ -66,27 +63,21 @@ local plugins = {
     opts = overrides.cmp,
     dependencies = {
       {
+        -- snippet plugin
+        "L3MON4D3/LuaSnip",
+        config = function()
+          require "custom.configs.luasnip"
+        end,
+      },
+      -- autopairing of (){}[] etc
+      {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
-        -- enabled = false,
         opts = {
-          map_bs = false, -- map the <BS> key
-          map_c_h = true, -- Map the <C-h> key to delete a pair
+          map_bs = true,
+          map_c_w = true, -- map <c-w> to delete a pair if possible
         },
       },
-    },
-    {
-      -- snippet plugin
-      "L3MON4D3/LuaSnip",
-      config = function()
-        local luasnip = require "luasnip"
-        luasnip.filetype_extend("javascriptreact", { "html" })
-        luasnip.filetype_extend("typescriptreact", { "html" })
-        require("luasnip.loaders.from_vscode").lazy_load()
-        require("luasnip.loaders.from_vscode").lazy_load {
-          paths = vim.fn.stdpath "config" .. "/lua/custom/my-snippets",
-        }
-      end,
     },
   },
 
@@ -114,6 +105,15 @@ local plugins = {
 
   -- Install a plugin
 
+  -- typescript
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    config = function()
+      require "custom.configs.typescript-tools"
+    end,
+  },
+
   {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
@@ -122,6 +122,16 @@ local plugins = {
     end,
   },
 
+  --linting
+  {
+    "mfussenegger/nvim-lint",
+    events = { "BufWritePost", "BufReadPost", "InsertLeave" }, -- event = "VeryLazy",
+    config = function()
+      require "custom.configs.lint"
+    end,
+  },
+
+  -- dressing
   {
     "stevearc/dressing.nvim",
     lazy = true,
@@ -229,15 +239,15 @@ local plugins = {
   },
 
   -- vim visual multi
-  {
-    "mg979/vim-visual-multi",
-    branch = "master",
-    lazy = false,
-    init = function()
-      -- theme : codedark, iceblue, purplegray, spacegray, ocean, nord, neon, papper
-      vim.g.VM_theme = "iceblue"
-    end,
-  },
+  -- {
+  --   "mg979/vim-visual-multi",
+  --   branch = "master",
+  --   event = "InsertEnter",
+  --   init = function()
+  --     -- theme : codedark, iceblue, purplegray, spacegray, ocean, nord, neon, papper
+  --     vim.g.VM_theme = "iceblue"
+  --   end,
+  -- },
 
   -- trouble nvim
   {
@@ -339,13 +349,13 @@ local plugins = {
   },
 
   -- tab out
-  {
-    "abecodes/tabout.nvim",
-    event = "VeryLazy",
-    config = function()
-      require "custom.configs.tabout"
-    end,
-  },
+  -- {
+  --   "abecodes/tabout.nvim",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require "custom.configs.tabout"
+  --   end,
+  -- },
 
   -- rest nvim http
   {
@@ -376,28 +386,13 @@ local plugins = {
   },
 
   -- mini pairs for delete because auto pairs conflict <BS> with vim-visual-multi
-  {
-    "echasnovski/mini.pairs",
-    event = "VeryLazy",
-    init = function()
-      require("mini.pairs").setup {
-        -- modes = { insert = false, command = false, terminal = false },
-        mappings = {
-          ["("] = {},
-          ["["] = {},
-          ["{"] = {},
-
-          [")"] = {},
-          ["]"] = {},
-          ["}"] = {},
-
-          ['"'] = {},
-          ["'"] = {},
-          ["`"] = {},
-        },
-      }
-    end,
-  },
+  -- {
+  --   "echasnovski/mini.pairs",
+  --   event = "VeryLazy",
+  --   init = function()
+  --     require("mini.pairs").setup {}
+  --   end,
+  -- },
 
   -- todo
   {
@@ -484,7 +479,8 @@ local plugins = {
   -- formatting with conform
   {
     "stevearc/conform.nvim",
-    event = { "BufWritePre" },
+    -- event = { "BufWritePre" },
+    lazy = true,
     cmd = { "ConformInfo" },
     init = function()
       require "custom.configs.conform"

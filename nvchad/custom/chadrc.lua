@@ -9,7 +9,7 @@ M.ui = {
   theme_toggle = { "solarized_dark", "one_light" },
   hl_override = highlights.override,
   hl_add = highlights.add,
-  lsp_semantic_tokens = true, -- needs nvim v0.9, just adds highlight groups for lsp semantic tokens
+  lsp_semantic_tokens = false, -- needs nvim v1.9, just adds highlight groups for lsp semantic tokens
   extended_integrations = { "notify", "lspsaga", "trouble", "dap", "rainbowdelimiters", "todo" }, -- these aren't compiled by default, ex: "alpha", "notify"
 
   -- nvdash (dashboard)
@@ -49,12 +49,20 @@ M.ui = {
   -- transparency = true,
 
   statusline = {
-    theme = "default", -- default/vscode/vscode_colored/minimal
+    theme = "minimal", -- default/vscode/vscode_colored/minimal
 
     -- default/round/block/arrow (separators work only for "default" statusline theme;
     -- round and block will work for the minimal theme only)
     separator_style = "arrow",
     overriden_modules = nil,
+  },
+
+  tabufline = {
+    -- remove buttons and padding
+    overriden_modules = function(modules)
+      table.remove(modules, #modules)
+      -- table.remove(modules, 1)
+    end,
   },
 
   telescope = {
@@ -77,7 +85,6 @@ M.ui = {
 }
 
 M.plugins = "custom.plugins"
-
 -- check core.mappings for table structure
 M.mappings = require "custom.mappings"
 

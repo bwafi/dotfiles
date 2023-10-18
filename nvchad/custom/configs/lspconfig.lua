@@ -1,10 +1,19 @@
 local on_attach = require("plugins.configs.lspconfig").on_attach
 local capabilities = require("plugins.configs.lspconfig").capabilities
 
+-- ufo fold https://github.com/kevinhwang91/nvim-ufo/issues/154#issuecomment-1701295317
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require("plugins.configs.lspconfig").capabilities
+-- -- capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.foldingRange = {
+  dynamicRegistration = false,
+  lineFoldingOnly = true,
+}
+
 local lspconfig = require "lspconfig"
 
 -- if you just want default config for the servers then put them in a table
-local servers = { "html", "cssls", "tsserver", "gopls", "eslint", "volar", "tailwindcss", "prismals", "sqlls" }
+local servers = { "html", "cssls", "gopls", "eslint", "volar", "tailwindcss", "prismals", "sqlls" }
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -17,7 +26,7 @@ lspconfig.cssls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
-    { settings = { css = { lint = { unknownAtRules = "ignore" } } } },
+    { settings = { css = { lint = { unknownAtRules = "ignore" } } } }, -- ignore warning tailwind global.css
   },
 }
 
@@ -41,22 +50,7 @@ lspconfig.emmet_language_server.setup {
   },
   -- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
   -- **Note:** only the options listed in the table are supported.
-  init_options = {
-    --- @type string[]
-    excludeLanguages = {},
-    --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
-    preferences = {},
-    --- @type boolean Defaults to `true`
-    showAbbreviationSuggestions = true,
-    --- @type "always" | "never" Defaults to `"always"`
-    showExpandedAbbreviation = "always",
-    --- @type boolean Defaults to `false`
-    showSuggestionsAsSnippets = false,
-    --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
-    syntaxProfiles = {},
-    --- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
-    variables = {},
-  },
+  init_options = {},
 }
 
 -- json

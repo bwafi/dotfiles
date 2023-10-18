@@ -1,18 +1,25 @@
 local options = {
+  format = {
+    timeout_ms = 3000,
+    async = false, -- not recommended to change
+    quiet = false, -- not recommended to change
+  },
+
   format_on_save = {
     lsp_fallback = true,
     timeout_ms = 500,
   },
+
   formatters_by_ft = {
     lua = { "stylua" },
-    javascript = { "prettierd" },
-    javascriptreact = { "prettierd" },
-    typescript = { "prettierd" },
-    typescriptreact = { "prettierd" },
+    javascript = { "prettier" },
+    javascriptreact = { "prettier" },
+    typescript = { "prettier" },
+    typescriptreact = { "prettier" },
     prisma = { "prisma" },
-    css = { "prettierd" },
-    html = { "prettierd" },
-    json = { "prettierd" },
+    css = { "prettier" },
+    html = { "prettier" },
+    json = { "prettier" },
     sh = { "shfmt" },
   },
 
@@ -34,3 +41,4 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 require("conform").setup(options)
+require("core.utils").load_mappings "conform"
