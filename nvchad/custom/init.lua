@@ -5,7 +5,7 @@
 --   pattern = "*",
 --   command = "tabdo wincmd =",
 -- })
---
+
 -- This file is automatically loaded by plugins.core
 local function augroup(name)
   return vim.api.nvim_create_augroup(name, { clear = true })
@@ -42,7 +42,7 @@ vim.o.foldenable = true
 
 -- disable fold in buffer/filetypes
 autocmd("FileType", {
-  pattern = { "nvcheatsheet", "neo-tree", "NvimTree", "nvdash", "dbui" },
+  pattern = { "nvcheatsheet", "neo-tree", "NvimTree", "Nvdash", "dbui" },
   callback = function()
     require("ufo").detach()
     vim.opt_local.foldenable = false

@@ -15,6 +15,13 @@ local plugins = {
       { "b0o/schemastore.nvim" },
       { "folke/neodev.nvim" },
       { "nvimdev/lspsaga.nvim" },
+      { "nvim-lua/plenary.nvim" },
+      {
+        "pmizio/typescript-tools.nvim",
+        config = function()
+          require "custom.configs.typescript-tools"
+        end,
+      },
     },
     config = function()
       require "plugins.configs.lspconfig"
@@ -69,16 +76,13 @@ local plugins = {
           require "custom.configs.luasnip"
         end,
       },
-      -- autopairing of (){}[] etc
-      {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        opts = {
-          map_bs = true,
-          map_c_w = true, -- map <c-w> to delete a pair if possible
-        },
-      },
     },
+  },
+
+  --  disbale autopairing of (){}[] etc
+  {
+    "windwp/nvim-autopairs",
+    enabled = false,
   },
 
   {
@@ -105,15 +109,17 @@ local plugins = {
 
   -- Install a plugin
 
-  -- typescript
+  --  disbale autopairing of (){}[] etc
   {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    "altermo/ultimate-autopair.nvim",
+    event = { "InsertEnter", "CmdlineEnter" },
+    branch = "v0.6", --recomended as each new version will have breaking changes
     config = function()
-      require "custom.configs.typescript-tools"
+      require "custom.configs.ultimate-autopairs"
     end,
   },
 
+  -- esc with jj or jk
   {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
@@ -239,15 +245,15 @@ local plugins = {
   },
 
   -- vim visual multi
-  -- {
-  --   "mg979/vim-visual-multi",
-  --   branch = "master",
-  --   event = "InsertEnter",
-  --   init = function()
-  --     -- theme : codedark, iceblue, purplegray, spacegray, ocean, nord, neon, papper
-  --     vim.g.VM_theme = "iceblue"
-  --   end,
-  -- },
+  {
+    "mg979/vim-visual-multi",
+    branch = "master",
+    event = "InsertEnter",
+    init = function()
+      -- theme : codedark, iceblue, purplegray, spacegray, ocean, nord, neon, papper
+      vim.g.VM_theme = "iceblue"
+    end,
+  },
 
   -- trouble nvim
   {
@@ -348,15 +354,6 @@ local plugins = {
     end,
   },
 
-  -- tab out
-  -- {
-  --   "abecodes/tabout.nvim",
-  --   event = "VeryLazy",
-  --   config = function()
-  --     require "custom.configs.tabout"
-  --   end,
-  -- },
-
   -- rest nvim http
   {
     "rest-nvim/rest.nvim",
@@ -384,15 +381,6 @@ local plugins = {
       require "custom.configs.lspsaga"
     end,
   },
-
-  -- mini pairs for delete because auto pairs conflict <BS> with vim-visual-multi
-  -- {
-  --   "echasnovski/mini.pairs",
-  --   event = "VeryLazy",
-  --   init = function()
-  --     require("mini.pairs").setup {}
-  --   end,
-  -- },
 
   -- todo
   {
