@@ -11,13 +11,4 @@ vim.g.rainbow_delimiters = {
     html = "rainbow-parens",
     vue = "rainbow_delimiters",
   },
-  -- highlight = {
-  --   "RainbowDelimiterRed",
-  --   "RainbowDelimiterYellow",
-  --   "RainbowDelimiterBlue",
-  --   "RainbowDelimiterOrange",
-  --   "RainbowDelimiterGreen",
-  --   "RainbowDelimiterViolet",
-  --   "RainbowDelimiterCyan",
-  -- },
 }

@@ -17,11 +17,15 @@ npairs.setup {
   },
 }
 
+local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
 -- fix map_bs conflict with vim-visual-multi
 vim.api.nvim_set_keymap("i", "<Plug>autopairs_bs", "v:lua.MPairs.autopairs_bs()", {
   expr = true,
   noremap = true,
 })
+
 vim.keymap.set("i", "<bs>", function()
   if vim.fn.foldclosed "." > -1 then
     return "<C-o>zo"

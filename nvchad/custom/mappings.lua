@@ -16,7 +16,6 @@ M.disabled = {
 M.general = {
   n = {
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
-
     -- lazy
     ["<leader>l"] = { "<cmd>Lazy<cr>", "Lazy" },
 
@@ -49,6 +48,8 @@ M.general = {
     },
 
     -- ["<leader>r"]
+    -- duplicate line
+    ["gm"] = { "<CMD>copy.<CR>" },
   },
 
   i = {
@@ -67,6 +68,9 @@ M.general = {
     -- move line
     ["<A-j>"] = { ":m '>+1<cr>gv=gv", "Move down" },
     ["<A-k>"] = { ":m '<-2<cr>gv=gv", "Move up" },
+
+    -- duplicate line
+    ["gm"] = { ":copy.-1<Cr>gv" },
   },
 }
 

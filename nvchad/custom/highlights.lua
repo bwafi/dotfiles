@@ -9,6 +9,7 @@ M.override = {
   Comment = {
     italic = true,
   },
+
   CursorLine = { bg = "black2" },
 
   -- nvdash highlight
@@ -16,8 +17,8 @@ M.override = {
   NvDashButtons = { bg = "black" },
 
   --Telescope highlights
-  TelescopePromptBorder = { fg = "one_bg3" },
-  TelescopeBorder = { fg = "one_bg3" },
+  TelescopePromptBorder = { fg = "blue" },
+  TelescopeBorder = { fg = "blue" },
 
   --  fold color
   FoldColumn = { bg = "black", fg = "grey_fg" },
@@ -37,7 +38,7 @@ M.add = {
   MiniCursorWord = { bg = "one_bg3" },
   MiniCursorWordCurrent = { bg = "one_bg3" },
 
-  -- SagaWinbarSep = { fg = "cyan" },
+  SagaWinbarSep = { fg = "cyan" },
 }
 
 return M

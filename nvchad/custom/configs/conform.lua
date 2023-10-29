@@ -12,14 +12,15 @@ local options = {
 
   formatters_by_ft = {
     lua = { "stylua" },
-    javascript = { "prettier" },
-    javascriptreact = { "prettier" },
-    typescript = { "prettier" },
-    typescriptreact = { "prettier" },
+    javascript = { "prettierd" },
+    javascriptreact = { "prettierd" },
+    typescript = { "prettierd" },
+    typescriptreact = { "prettierd" },
     prisma = { "prisma" },
-    css = { "prettier" },
-    html = { "prettier" },
-    json = { "prettier" },
+    css = { "prettierd" },
+    html = { "prettierd" },
+    json = { "prettierd" },
+    jsonc = { "prettierd" },
     sh = { "shfmt" },
   },
 

@@ -5,7 +5,7 @@
 --   pattern = "*",
 --   command = "tabdo wincmd =",
 -- })
-
+--
 -- This file is automatically loaded by plugins.core
 local function augroup(name)
   return vim.api.nvim_create_augroup(name, { clear = true })
@@ -42,7 +42,7 @@ vim.o.foldenable = true
 
 -- disable fold in buffer/filetypes
 autocmd("FileType", {
-  pattern = { "nvcheatsheet", "neo-tree", "NvimTree", "Nvdash", "dbui" },
+  pattern = { "nvcheatsheet", "neo-tree", "NvimTree", "dbui", "Empty" },
   callback = function()
     require("ufo").detach()
     vim.opt_local.foldenable = false
@@ -50,10 +50,6 @@ autocmd("FileType", {
     vim.opt_local.signcolumn = "no"
   end,
 })
-
--- snippets
--- local lpath = vim.fn.stdpath "config" .. "/lua/custom/my-snippets"
--- vim.g.vscode_snippets_path = lpath
 
 -- disable mini.cursorword in nvim-tree
 autocmd("FileType", {

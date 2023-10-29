@@ -14,7 +14,6 @@ local plugins = {
       -- },
       { "b0o/schemastore.nvim" },
       { "folke/neodev.nvim" },
-      { "nvimdev/lspsaga.nvim" },
       { "nvim-lua/plenary.nvim" },
       {
         "pmizio/typescript-tools.nvim",
@@ -26,7 +25,7 @@ local plugins = {
     config = function()
       require "plugins.configs.lspconfig"
       require "custom.configs.lspconfig"
-    end, -- Override to setup mason-lspconfig
+    end,
   },
 
   -- override plugin configs
@@ -76,13 +75,13 @@ local plugins = {
           require "custom.configs.luasnip"
         end,
       },
+      {
+        "windwp/nvim-autopairs",
+        config = function()
+          require "custom.configs.autopairs"
+        end,
+      },
     },
-  },
-
-  --  disbale autopairing of (){}[] etc
-  {
-    "windwp/nvim-autopairs",
-    enabled = false,
   },
 
   {
@@ -109,16 +108,6 @@ local plugins = {
 
   -- Install a plugin
 
-  --  disbale autopairing of (){}[] etc
-  {
-    "altermo/ultimate-autopair.nvim",
-    event = { "InsertEnter", "CmdlineEnter" },
-    branch = "v0.6", --recomended as each new version will have breaking changes
-    config = function()
-      require "custom.configs.ultimate-autopairs"
-    end,
-  },
-
   -- esc with jj or jk
   {
     "max397574/better-escape.nvim",
@@ -140,7 +129,7 @@ local plugins = {
   -- dressing
   {
     "stevearc/dressing.nvim",
-    lazy = true,
+    event = "VeryLazy",
     init = function()
       vim.ui.select = function(...)
         require("lazy").load { plugins = { "dressing.nvim" } }
@@ -168,7 +157,6 @@ local plugins = {
           level = vim.log.levels.TRACE, -- minimum severity level
           timeout = 4000,
           stages = "slide", -- slide|fade
-          icons = { DEBUG = "", ERROR = "", INFO = "", TRACE = "", WARN = "" },
         },
       },
     },
@@ -273,9 +261,7 @@ local plugins = {
     version = "*", -- Use for stability; omit to use `main` branch for the latest features
     event = "VeryLazy",
     config = function()
-      require("nvim-surround").setup {
-        -- Configuration here, or leave empty to use defaults
-      }
+      require("nvim-surround").setup {}
     end,
   },
 
@@ -292,8 +278,9 @@ local plugins = {
   -- neotest
   {
     "nvim-neotest/neotest",
+    event = "LspAttach",
     dependencies = {
-      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
       "haydenmeade/neotest-jest",
       "marilari88/neotest-vitest",
       "nvim-neotest/neotest-go",
@@ -326,31 +313,12 @@ local plugins = {
     end,
   },
 
-  {
-    "anuvyklack/fold-preview.nvim",
-    event = "VimEnter",
-    config = true,
-    dependencies = "anuvyklack/keymap-amend.nvim",
-    opts = {
-      -- auto = 1,
-      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    },
-  },
-
   -- mini animate
   {
     "echasnovski/mini.animate",
     event = "VeryLazy",
     config = function()
       require "custom.configs.mini-animate"
-    end,
-  },
-
-  -- mini operators
-  {
-    "echasnovski/mini.operators",
-    init = function()
-      require("mini.operators").setup()
     end,
   },
 
@@ -371,15 +339,6 @@ local plugins = {
     keys = {
       { "<leader>fu", "<cmd>UndotreeToggle<cr>", desc = "Undo tree" },
     },
-  },
-
-  -- lsp saga
-  {
-    "nvimdev/lspsaga.nvim",
-    event = "LspAttach",
-    config = function()
-      require "custom.configs.lspsaga"
-    end,
   },
 
   -- todo
@@ -414,35 +373,6 @@ local plugins = {
   },
   },
 
-  -- cutlass
-  {
-    "gbprod/cutlass.nvim",
-    event = "BufReadPost",
-    opts = {
-      cut_key = "x",
-      override_del = true,
-      exclude = {},
-      registers = {
-        select = "_",
-        delete = "_",
-        change = "_",
-      },
-    },
-  },
-
-  -- treesj toggle join
-  {
-    "Wansmer/treesj",
-    cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {
-      use_default_keymaps = false,
-    },
-    keys = {
-      { "<leader>m", "<CMD>TSJToggle<CR>", desc = "Toggle Treesitter Join" },
-    },
-  },
-
   --markdown preview
   {
     "iamcco/markdown-preview.nvim",
@@ -467,11 +397,25 @@ local plugins = {
   -- formatting with conform
   {
     "stevearc/conform.nvim",
-    -- event = { "BufWritePre" },
+    event = { "BufWritePre" },
     lazy = true,
     cmd = { "ConformInfo" },
     init = function()
       require "custom.configs.conform"
+    end,
+  },
+
+  -- winbar barbecue
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    lazy = false,
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+    },
+    config = function()
+      require "custom.configs.barbecue"
     end,
   },
 

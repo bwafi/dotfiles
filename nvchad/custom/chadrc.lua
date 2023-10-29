@@ -5,8 +5,8 @@ local M = {}
 local highlights = require "custom.highlights"
 
 M.ui = {
-  theme = "solarized_dark",
-  theme_toggle = { "solarized_dark", "one_light" },
+  theme = "tokyonight",
+  theme_toggle = { "tokyonight", "one_light" },
   hl_override = highlights.override,
   hl_add = highlights.add,
   lsp_semantic_tokens = false, -- needs nvim v1.9, just adds highlight groups for lsp semantic tokens
@@ -23,18 +23,6 @@ M.ui = {
       "██▄▪▐█▐█ ▪▐▌▐█▌██▐█▌▐█ ▪▐▌██▌.▐█▌",
       "·▀▀▀▀  ▀  ▀  ▀▀▀▀ ▀▪ ▀  ▀ ▀▀▀ ▀▀▀",
     },
-
-    -- header = {
-    --   "           ▄ ▄                   ",
-    --   "       ▄   ▄▄▄     ▄ ▄▄▄ ▄ ▄     ",
-    --   "       █ ▄ █▄█ ▄▄▄ █ █▄█ █ █     ",
-    --   "    ▄▄ █▄█▄▄▄█ █▄█▄█▄▄█▄▄█ █     ",
-    --   "  ▄ █▄▄█ ▄ ▄▄ ▄█ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄  ",
-    --   "  █▄▄▄▄ ▄▄▄ █ ▄ ▄▄▄ ▄ ▄▄▄ ▄ ▄ █ ▄",
-    --   "▄ █ █▄█ █▄█ █ █ █▄█ █ █▄█ ▄▄▄ █ █",
-    --   "█▄█ ▄ █▄▄█▄▄█ █ ▄▄█ █ ▄ █ █▄█▄█ █",
-    --   "    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█ █▄█▄▄▄█    ",
-    -- },
   },
 
   -- transparency = true,
@@ -57,13 +45,13 @@ M.ui = {
   },
 
   telescope = {
-    style = "bordered",
+    style = "bordered", -- bordered or borderless
   },
 
   cmp = {
     icons = true,
     lspkind_text = true,
-    style = "default", -- default/flat_light/flat_dark/atom/atom_colored
+    style = "flat_light", -- default/flat_light/flat_dark/atom/atom_colored
     border_color = "grey_fg", -- only applicable for "default" style, use color names from base30 variables
     selected_item_bg = "colored", -- colored / simple
   },
