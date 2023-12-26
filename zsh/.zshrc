@@ -1,91 +1,81 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
+# completion path
 fpath=($HOME/.zfunc $fpath)
 
+export TERM='xterm-256color'
+export EDITOR='nvim'
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="wapi"
+# ZSH_THEME="spaceship"
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+zstyle ':omz:update' mode auto      # update automatically without asking
 
-# Uncomment the following line to use case-sensitive completion.
-CASE_SENSITIVE="true"
+zstyle :omz:plugins:ssh-agent identities ~/.ssh/id_ed25519
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# adding ssh key to ssh-agent
-# zstyle :omz:plugins:ssh-agent identities ~/.ssh/syahroni ~/.ssh/ssh_key2
-zstyle :omz:plugins:ssh-agent identities ~/.ssh/syahroni
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
 # COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Time for History
 # HIST_STAMPS="mm/dd/yyyy"
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Plugins
-plugins=(tmux frontend-search web-search git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
-# plugins=(git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(z zsh-autopair tmux git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting ssh-agent you-should-use)
 
 
 #auto start tmux
 ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_DEFAULT_SESSION_NAME="Wapi"
 
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
+####### User configuration #######
+
+## configuration nnn https://github.com/jarun/nnn/
+export NNN_FIFO=/tmp/nnn.fifo
+export NNN_PLUG='p:preview-tui'
+export PAGER='less -R'
+export NNN_OPENER=/home/wapi/.config/nnn/plugins/nuke
+export NNN_TRASH=1
+
+# cd on quit nnn https://github.com/jarun/nnn/blob/master/misc/quitcd/quitcd.bash_sh_zsh
+n ()
+{
+    # Block nesting of nnn in subshells
+    [ "${NNNLVL:-0}" -eq 0 ] || {
+        echo "nnn is already running"
+        return
+    }
+
+    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
+    # see. To cd on quit only on ^G, remove the "export" and make sure not to
+    # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
+    #      NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    # The command builtin allows one to alias nnn to n, if desired, without
+    # making an infinitely recursive alias
+    command nnn "$@" -Pp
+
+    [ ! -f "$NNN_TMPFILE" ] || {
+        . "$NNN_TMPFILE"
+        rm -f "$NNN_TMPFILE" > /dev/null
+    }
+}
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
-# You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
@@ -95,21 +85,90 @@ source $ZSH/oh-my-zsh.sh
 #   export EDITOR='nvim'
 # fi
 
+## nvim config switcher
+# nvims() {
+#   if [ $# -eq 0 ]; then
+#     items=$(find ${XDG_CONFIG_HOME:-$HOME/.config} -maxdepth 1 -name 'nvim-*' -exec sh -c 'basename {} | cut -d"-" -f2' \;)
+#     appname=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height=10% --layout=reverse --border --exit-0)
+#   else
+#     appname="$1"
+#     shift
+#   fi
+#
+#   installed_version=$(nvim --version | awk 'NR == 1 {split($2, a, "-"); print a[1]}')
+#
+#   ## add required_version
+#   case "$appname" in
+#     "lazyvim")
+#       required_version="v0.10.0"
+#       ;;
+#     "nvchad")
+#       required_version="v0.9.4"
+#       ;;
+#     *)
+#       echo "Unsupported appname: $appname"
+#       return 1
+#       ;;
+#   esac
+#
+#   if [[ "$required_version" != "$installed_version" ]]; then
+#     if [[ "$appname" == "lazyvim" ]]; then
+#       bob use nightly
+#     else
+#       bob use "$required_version"
+#     fi
+#     echo "Switch to Neovim version $required_version"
+#   fi
+#
+#   dir="${XDG_CONFIG_HOME:-$HOME/.config}/nvim-${appname}"
+#   if [[ -d "${dir}" ]]; then
+#     NVIM_APPNAME="$(basename ${dir})" nvim ${@}
+#   else
+#     echo "${dir} doesn't exist..." && return 1
+#   fi
+# }
+#
+# bindkey -s "^v" "nvims\n"
+# alias v="nvims lazyvim" ## default key
+# alias vlazy="nvims lazyvim"
+# alias vchad="nvims nvchad"
+#
+# bindkey -s "^v" "nvim\n"
+# alias nv="NVIM_APPNAME=nvim-nvchad nvim"
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
 
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias lazy="cd ~/.config/nvim"
-alias nvchad="cd ~/.config/nvim/lua/custom/"
+
 alias mongostop="sudo systemctl stop mongod"
 alias mongostart="sudo systemctl start mongod"
+alias mysqlstart="sudo service mysql start"
+alias mysqlstop="sudo service mysql stop"
+alias air='~/go/bin/air'
+
+alias cat='bat'
+
+# eza aliases https://github.com/eza-community/eza
+alias ls='eza --icons=always'                                                         # ls
+alias l='eza -lbF --git --icons=always'                                               # list, size, type, git
+alias ll='eza -lbGF --git --icons=always'                                             # long list
+alias llm='eza -lbGd --git --sort=modified --icons=always'                            # long list, modified date sort
+alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale --icons=always'  # all list
+alias lx='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale --icons=always' # all + extended list
+# eza aliases specialty views
+alias lS='eza -1 --icons=always'                                                       # one column, just names
+alias lt='eza --tree --level=2 --icons=always'                                         # tree
+
+# aliases trash-cli https://github.com/andreafrancia/trash-cli
+alias tp='trash-put'             # trash files and directories.
+alias trestore='trash-restore'   # restore a trashed file.
+alias tlist='trash-list'         # list trashed files.
+alias te='trash-empty'           # empty the trashcan(s).
+alias trm='trash-rm'             # remove individual files from the trashcan.
 
 # global aliases
 alias -g v=nvim
 alias -g c=clear
+alias -g x=exit
+alias -g fd=fdfind
 
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -118,20 +177,23 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
-# nvm
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# nnn file manager aliases
+alias nx='nnn -c'                                         # tree
+bindkey -s '^e' 'n^M'
 
-# bun completions
-[ -s "/home/wapi/.bun/_bun" ] && source "/home/wapi/.bun/_bun"
+# rofi scripts
+export PATH=$HOME/.config/rofi/scripts:$PATH
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# Volta javascript/node js package manager
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
+
+# bob neovim version manager
+# export PATH=$PATH:/home/wapi/.local/share/bob/nvim-bin
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# fnm
-export PATH="/home/wapi/.local/share/fnm:$PATH"
-eval "`fnm env`"
+# prompt https://starship.rs/
+# eval "$(starship init zsh)"
+# export STARSHIP_CONFIG=~/.config/starship.toml
