@@ -54,15 +54,15 @@ ys_hg_prompt_info() {
 local git_metrics='$(git_metrics_info)'
 git_metrics_info() {
     local git_diff=$(git diff --shortstat 2>/dev/null)
-    local added_lines=$(echo "$git_diff" | awk '{print $4}')
-    local deleted_lines=$(echo "$git_diff" | awk '{print $6}')
+    local added_lines=$(echo "$git_diff" | grep -oE '([0-9]+) insertion' | awk '{print $1}')
+    local deleted_lines=$(echo "$git_diff" | grep -oE '([0-9]+) deletions' | awk '{print $1}')
 
     local result=""
     if [ -n "$added_lines" ]; then
-        result+="%{${fg[green]}%}+$added_lines%{$fg[yellow]%}"
+        result+="%{${fg[green]}%}+$added_lines%{$fg[yellow]%} "
     fi
     if [ -n "$deleted_lines" ]; then
-        result+=" %{${fg[red]}%}-$deleted_lines%{$fg[yellow]%}"
+        result+="%{${fg[red]}%}-$deleted_lines%{$fg[yellow]%}"
     fi
 
     if [ -n "$result" ]; then
