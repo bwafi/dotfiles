@@ -8,7 +8,6 @@ export ZSH="$HOME/.oh-my-zsh"
 
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="wapi"
-# ZSH_THEME="spaceship"
 
 zstyle ':omz:update' mode auto      # update automatically without asking
 
@@ -27,7 +26,7 @@ plugins=(z zsh-autopair tmux git zsh-history-substring-search zsh-autosuggestion
 
 #auto start tmux
 ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_DEFAULT_SESSION_NAME="Wapi"
+ZSH_TMUX_DEFAULT_SESSION_NAME="dev"
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
@@ -77,13 +76,6 @@ n ()
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='nvim'
-# else
-#   export EDITOR='nvim'
-# fi
 
 ## nvim config switcher
 # nvims() {
@@ -164,11 +156,18 @@ alias tlist='trash-list'         # list trashed files.
 alias te='trash-empty'           # empty the trashcan(s).
 alias trm='trash-rm'             # remove individual files from the trashcan.
 
+# alias 
+alias v=nvim
+alias c=clear
+alias x=exit
+alias fd=fdfind
+alias tx=tmuxinator 
+
 # global aliases
-alias -g v=nvim
-alias -g c=clear
-alias -g x=exit
-alias -g fd=fdfind
+# alias -g v=nvim
+# alias -g c=clear
+# alias -g x=exit
+# alias -g fd=fdfind
 
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -188,12 +187,7 @@ export PATH=$HOME/.config/rofi/scripts:$PATH
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-
-# bob neovim version manager
-# export PATH=$PATH:/home/wapi/.local/share/bob/nvim-bin
-
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# prompt https://starship.rs/
-# eval "$(starship init zsh)"
-# export STARSHIP_CONFIG=~/.config/starship.toml
+# go language
+export PATH=$PATH:/usr/local/go/bin
