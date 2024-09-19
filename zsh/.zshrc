@@ -7,7 +7,8 @@ export EDITOR='nvim'
 export ZSH="$HOME/.oh-my-zsh"
 
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="wapi"
+# ZSH_THEME="wapi"
+eval "$(starship init zsh)"
 
 zstyle ':omz:update' mode auto      # update automatically without asking
 
@@ -21,7 +22,7 @@ zstyle :omz:plugins:ssh-agent identities ~/.ssh/id_ed25519
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 # HIST_STAMPS="mm/dd/yyyy"
 
-plugins=(z zsh-autopair tmux git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting ssh-agent you-should-use)
+plugins=(z zsh-autopair git zsh-history-substring-search zsh-autosuggestions zsh-syntax-highlighting ssh-agent)
 
 
 #auto start tmux
@@ -187,7 +188,12 @@ export PATH=$HOME/.config/rofi/scripts:$PATH
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # go language
 export PATH=$PATH:/usr/local/go/bin
+
+# fnm
+FNM_PATH="/home/syro/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/syro/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
